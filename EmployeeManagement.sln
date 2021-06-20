@@ -5,9 +5,7 @@ VisualStudioVersion = 16.0.31205.175
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeManagement", "EmployeeManagement\EmployeeManagement.csproj", "{BC000A4A-77FF-4178-BC2F-653E1AB4245D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagement.DataAccess", "EmployeeManagement.DataAccess\EmployeeManagement.DataAccess.csproj", "{46257519-4984-442B-9DE3-2AF480958B63}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeManagementUsingDB", "EmployeeManagementUsingDB\EmployeeManagementUsingDB.csproj", "{D5BE2F5A-35E2-4BAB-B3CE-0EF8115F3D33}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeManagementUsingDB", "EmployeeManagementUsingDB\EmployeeManagementUsingDB.csproj", "{D5BE2F5A-35E2-4BAB-B3CE-0EF8115F3D33}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +17,6 @@ Global
 		{BC000A4A-77FF-4178-BC2F-653E1AB4245D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC000A4A-77FF-4178-BC2F-653E1AB4245D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC000A4A-77FF-4178-BC2F-653E1AB4245D}.Release|Any CPU.Build.0 = Release|Any CPU
-		{46257519-4984-442B-9DE3-2AF480958B63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{46257519-4984-442B-9DE3-2AF480958B63}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{46257519-4984-442B-9DE3-2AF480958B63}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{46257519-4984-442B-9DE3-2AF480958B63}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D5BE2F5A-35E2-4BAB-B3CE-0EF8115F3D33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D5BE2F5A-35E2-4BAB-B3CE-0EF8115F3D33}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D5BE2F5A-35E2-4BAB-B3CE-0EF8115F3D33}.Release|Any CPU.ActiveCfg = Release|Any CPU
