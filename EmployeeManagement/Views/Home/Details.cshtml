@@ -1,0 +1,144 @@
+﻿@*View Data Example*@
+@*<html>
+    <head>
+
+    </head>
+    <body>
+        <h3>@ViewData["Title"]</h3>
+
+        @{
+            var employee = ViewData["Employee"] as EmployeeManagement.Model.Employee;
+        }
+
+        <div>
+            Name : @employee.Name
+        </div>
+        <div>
+            Email : @employee.Email
+        </div>
+        <div>
+            Department : @employee.Department
+        </div>
+
+    </body>
+    </html>*@
+
+@*View Bag Example*@
+
+@*<html>
+    <head>
+
+    </head>
+    <body>
+        <h3>@ViewBag.Title</h3>
+
+        @{
+                var employee = @ViewBag.Employee as EmployeeManagement.Model.Employee;
+            }
+
+        <div>
+            Name : @ViewBag.employee.Name
+        </div>
+        <div>
+            Email : @ViewBag.employee.Email
+        </div>
+        <div>
+            Department : @ViewBag.employee.Department
+        </div>
+
+    </body>
+    </html>*@
+
+@*@model EmployeeManagement.ViewModels.HomeDetailsViewModel
+
+    @{
+        //Layout = "~/Views/Shared/_Layout.cshtml";
+        //ViewBag.Title = "Employee Details";
+    }
+
+    <h3>@Model.PageTitle</h3>
+
+    @{
+        var employee = @ViewBag.Employee as EmployeeManagement.Model.Employee;
+        }
+
+    <div>
+        Name : @Model.Employee.Name
+    </div>
+    <div>
+        Email : @Model.Employee.Email
+    </div>
+    <div>
+        Department : @Model.Employee.Department
+    </div>
+
+    @section Scripts {
+
+        <script src="~/js/custom.js"></script>
+    }*@
+
+--------------------Using ViewImports-------------------------------------------------
+
+@*@model HomeDetailsViewModel
+
+    @{
+        //Layout = "~/Views/Shared/_Layout.cshtml";
+        //ViewBag.Title = "Employee Details";
+    }
+
+    <h3>@Model.PageTitle</h3>
+
+    @{
+        var employee = @ViewBag.Employee as EmployeeManagement.Model.Employee;
+        }
+
+    <div>
+        Name : @Model.Employee.Name
+    </div>
+    <div>
+        Email : @Model.Employee.Email
+    </div>
+    <div>
+        Department : @Model.Employee.Department
+    </div>
+
+    @section Scripts {
+
+        <script src="~/js/custom.js"></script>
+    }*@
+
+@*--------------------Using Bootstrap-------------------------------------------------*@
+
+@model HomeDetailsViewModel
+
+@{
+    ViewBag.Title = @Model.PageTitle;
+}
+
+<div class="row justify-content-center m-3">
+    <div class="col-sm-8">
+        <div class="card">
+            <div class="card-header">
+                <h1>@Model.Employee.Name</h1>
+            </div>
+
+            <div class="card-body text-center">
+                <img class="card-img-top" src="~/images/Google.png" asp-append-version="true" />
+
+                <h4>Employee ID : @Model.Employee.Id</h4>
+                <h4>Email : @Model.Employee.Email</h4>
+                <h4>Department : @Model.Employee.Department</h4>
+
+            </div>
+            <div class="card-footer text-center">
+                <a asp-action="Index" class="btn btn-primary">Back</a>
+                <a href="#" class="btn btn-primary">Edit</a>
+                <a href="#" class="btn btn-danger">Delete</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/CustomScript.js"></script>
+}
