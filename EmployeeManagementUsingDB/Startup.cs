@@ -28,7 +28,6 @@ namespace EmployeeManagementUsingDB
 
             services.AddMvc(o=>o.EnableEndpointRouting=false).AddXmlSerializerFormatters();
 
-           // services.AddTransient<IEmployeeRepository, EmployeeRepository>();
 
             services.AddScoped<IEmployeeRepository, SQLEmployeRepository>();
         }

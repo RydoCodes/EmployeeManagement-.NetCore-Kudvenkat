@@ -8,26 +8,26 @@ namespace EmployeeManagementUsingDB.Model
 {
     public class SQLEmployeRepository : IEmployeeRepository
     {
-        private readonly AppDbContext context;
-        public SQLEmployeRepository(AppDbContext context)
+        private readonly AppDbContext rydocontext;
+        public SQLEmployeRepository(AppDbContext rydocontext)
         {
-            this.context = context;
+            this.rydocontext = rydocontext;
         }
 
         public Employee AddEmployee(Employee employee)
         {
-            context.Employees.Add(employee);
-            context.SaveChanges();
+            rydocontext.Employees.Add(employee);
+            rydocontext.SaveChanges();
             return employee;
         }
 
         public Employee Delete(int id)
         {
-            Employee emp = context.Employees.Find(id);
+            Employee emp = rydocontext.Employees.Find(id);
             if(emp!=null)
             {
-                context.Employees.Remove(emp);
-                context.SaveChanges();
+                rydocontext.Employees.Remove(emp);
+                rydocontext.SaveChanges();
             }
 
             return emp;
@@ -35,19 +35,19 @@ namespace EmployeeManagementUsingDB.Model
 
         public Employee GetEmployee(int Id)
         {
-            return context.Employees.Find(Id);
+            return rydocontext.Employees.Find(Id);
         }
 
         public IEnumerable<Employee> GetEmployee()
         {
-            return context.Employees;
+            return rydocontext.Employees;
         }
 
         public Employee Update(Employee employeechanges)
         {
-            var employee=context.Employees.Attach(employeechanges);
+            var employee= rydocontext.Employees.Attach(employeechanges);
             employee.State = Microsoft.EntityFrameworkCore.EntityState.Modified;
-            context.SaveChanges();
+            rydocontext.SaveChanges();
             return employeechanges;
         }
     }
