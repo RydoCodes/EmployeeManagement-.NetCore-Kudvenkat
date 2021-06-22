@@ -29,14 +29,20 @@ namespace EmployeeManagementUsingDB.Controllers
             return View(lstEmployees);
         }
 
-        public ViewResult Details(int id)
+        public ViewResult Details(int? id)
         {
-            Employee model = _employeeRepository.GetEmployee(id);
+            Employee rydoemployee = _employeeRepository.GetEmployee(id?? 4); // If the id passed is empty then by default employee with id 1 is retrieved.
+
+            if(rydoemployee == null)
+            {
+                Response.StatusCode = 404;
+                return View("EmployeeNotFound", id.Value);
+            }
 
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {
-                employee = model,
-                PageTitle= "Employee Details page"
+                employee = rydoemployee,
+                PageTitle = "Employee Details page"
                 
             };
 
