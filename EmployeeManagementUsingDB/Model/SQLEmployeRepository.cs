@@ -1,4 +1,5 @@
 ﻿using EmployeeManagementUsingDB.Model;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,12 @@ namespace EmployeeManagementUsingDB.Model
     public class SQLEmployeRepository : IEmployeeRepository
     {
         private readonly AppDbContext rydocontext;
-        public SQLEmployeRepository(AppDbContext rydocontext)
+        private readonly ILogger<SQLEmployeRepository> logger;
+
+        public SQLEmployeRepository(AppDbContext rydocontext,ILogger<SQLEmployeRepository> logger)
         {
             this.rydocontext = rydocontext;
+            this.logger = logger;
         }
 
         public Employee AddEmployee(Employee employee)
@@ -35,6 +39,13 @@ namespace EmployeeManagementUsingDB.Model
 
         public Employee GetEmployee(int Id)
         {
+            logger.LogTrace("Trace Log");
+            logger.LogDebug("Debug Log");
+            logger.LogInformation("Information Log");
+            logger.LogWarning("Warning Log");
+            logger.LogError("Error Log");
+            logger.LogCritical("Critical Log");
+
             return rydocontext.Employees.Find(Id);
         }
 

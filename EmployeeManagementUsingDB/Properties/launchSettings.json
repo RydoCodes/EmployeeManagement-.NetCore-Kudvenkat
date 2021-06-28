@@ -3,22 +3,22 @@
     "windowsAuthentication": false, 
     "anonymousAuthentication": true, 
     "iisExpress": {
-      "applicationUrl": "http://localhost:1078",
+      "applicationUrl": "http://localhost:1099",
       "sslPort": 44365
     }
   },
   "profiles": {
     "IIS Express": {
-      "commandName": "IISExpress",
+      "commandName": "IISExpress", // InProcess Hosting Model - Using IIS Express
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Staging"
+        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "EmployeeManagementUsingDB": {
-      "commandName": "Project",
+      "commandName": "Project", // Project file settings ignored if you use this profile as it has commandname as project. : Using Kestrel
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:5001",
+      "applicationUrl": "https://localhost:5000",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

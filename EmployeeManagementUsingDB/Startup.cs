@@ -41,7 +41,12 @@ namespace EmployeeManagementUsingDB
             }
             else
             {
-                app.UseStatusCodePagesWithRedirects("/Error/{0}");
+                // app.UseExceptionHandler("/ErrorInformationonViewPage"); //  Global exception handling in asp net core mvc - Use it when you want to display the error information on the viewpage
+                app.UseExceptionHandler("/ErrorInformationusingILogger");
+
+               // app.UseStatusCodePagesWithRedirects("/Error/{0}");
+               //app.UseStatusCodePagesWithReExecute("/ErrorInformationonViewPage/{0}");
+                app.UseStatusCodePagesWithReExecute("/ErrorInformationusingILogger/{0}");
             }
 
             app.UseStaticFiles();

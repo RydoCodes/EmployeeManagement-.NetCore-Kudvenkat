@@ -4,7 +4,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@ViewBag.ErrorMessage
-<a asp-controller="Home" asp-action="Index" class="btn" style="width:auto">
+<h1>@ViewBag.ErrorMessage</h1>
+<h1>@ViewBag.Path</h1>
+<h1>@ViewBag.QS</h1>
+
+<a asp-controller="Home" asp-action="Index">
     Click here to go to HomePage
 </a>

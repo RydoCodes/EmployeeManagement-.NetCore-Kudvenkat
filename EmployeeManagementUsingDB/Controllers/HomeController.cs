@@ -8,30 +8,45 @@ using EmployeeManagementUsingDB.ViewModels;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace EmployeeManagementUsingDB.Controllers
 {
     public class HomeController : Controller
     {
-        private IEmployeeRepository _employeeRepository;
-        private readonly IWebHostEnvironment _environment;
+        private readonly IEmployeeRepository employeeRepository;
+        private readonly IWebHostEnvironment environment;
+        private readonly ILogger logger;
 
-        public HomeController(IEmployeeRepository employeeRepository,IWebHostEnvironment environment)
+        public HomeController(IEmployeeRepository employeeRepository,IWebHostEnvironment environment,ILogger<HomeController> logger)
         {
-            _employeeRepository = employeeRepository;
-            _environment = environment;
+            this.employeeRepository = employeeRepository;
+            this.environment = environment;
+            this.logger = logger;
         }
 
         [Route("~/")]
         public IActionResult Index()
         {
-            IEnumerable<Employee> lstEmployees = _employeeRepository.GetEmployee();
+            var testloglevel = LogLevel.Trace; // This is to show the enumerations present in Loglevel class
+
+            IEnumerable<Employee> lstEmployees = employeeRepository.GetEmployee();
             return View(lstEmployees);
         }
 
         public ViewResult Details(int? id)
         {
-            Employee rydoemployee = _employeeRepository.GetEmployee(id?? 4); // If the id passed is empty then by default employee with id 1 is retrieved.
+            //throw new Exception();
+
+            logger.LogTrace("Trace Log");
+            logger.LogDebug("Debug Log");
+            logger.LogInformation("Information Log");
+            logger.LogWarning("Warning Log");
+            logger.LogError("Error Log");
+            logger.LogCritical("Critical Log");
+
+
+            Employee rydoemployee = employeeRepository.GetEmployee(id?? 4); // If the id passed is empty then by default employee with id 1 is retrieved.
 
             if(rydoemployee == null)
             {
@@ -56,7 +71,7 @@ namespace EmployeeManagementUsingDB.Controllers
 
         public ViewResult Edit(int id)
         {
-            Employee emp = _employeeRepository.GetEmployee(id);
+            Employee emp = employeeRepository.GetEmployee(id);
 
             EmployeeEditViewModel employeeEditViewModel = new EmployeeEditViewModel()
             {
@@ -84,7 +99,7 @@ namespace EmployeeManagementUsingDB.Controllers
                     PhotoPat = uniqueFileName
                 };
 
-                _employeeRepository.AddEmployee(newemployee);
+                employeeRepository.AddEmployee(newemployee);
                 return RedirectToAction("Details", new { id = newemployee.Id });
             }
 
@@ -96,7 +111,7 @@ namespace EmployeeManagementUsingDB.Controllers
         [HttpPost]
         public IActionResult Edit(EmployeeEditViewModel model)
         {
-            Employee rydoemp = _employeeRepository.GetEmployee(model.Id);
+            Employee rydoemp = employeeRepository.GetEmployee(model.Id);
             rydoemp.Name = model.Name;
             rydoemp.Department = model.Department;
             rydoemp.Email = model.Email;
@@ -108,13 +123,13 @@ namespace EmployeeManagementUsingDB.Controllers
                     // Meaning Employee already has chosen a photo while creation.
                     if(model.ExistingPhotoPath!=null)
                     { 
-                        var filepath = Path.Combine(_environment.WebRootPath,"Images",model.ExistingPhotoPath);
+                        var filepath = Path.Combine(environment.WebRootPath,"Images",model.ExistingPhotoPath);
                         System.IO.File.Delete(filepath);
                     }
                     rydoemp.PhotoPat = ProcessUploadedFile(model);
                 }
 
-                _employeeRepository.Update(rydoemp);
+                employeeRepository.Update(rydoemp);
                 return RedirectToAction("Index", new { id = rydoemp.Id });
             }
 
@@ -128,7 +143,7 @@ namespace EmployeeManagementUsingDB.Controllers
             {
                 foreach (IFormFile photo in model.Photos)
                 {
-                    string path = Path.Combine(_environment.WebRootPath, "Images");
+                    string path = Path.Combine(environment.WebRootPath, "Images");
                     uniqueFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
 
                     string filepath = Path.Combine(path, uniqueFileName);
