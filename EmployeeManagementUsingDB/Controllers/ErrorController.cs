@@ -60,7 +60,7 @@ namespace EmployeeManagementUsingDB.Controllers
 
             ViewBag.ExceptionPath = exceptionDetails.Path;
             ViewBag.ExceptionMessage = exceptionDetails.Error.Message;
-            ViewBag.StackTrace = exceptionDetails.Error.StackTrace;
+            ViewBag.StackTrace = exceptionDetails.Error.StackTrace; // Stack Trace shows where were you in the Program when the Error occured.
 
             return View("Error");
         }

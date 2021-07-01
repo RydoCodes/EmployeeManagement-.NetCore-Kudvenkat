@@ -12,7 +12,7 @@
       "commandName": "IISExpress", // InProcess Hosting Model - Using IIS Express
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Production"
       }
     },
     "EmployeeManagementUsingDB": {
