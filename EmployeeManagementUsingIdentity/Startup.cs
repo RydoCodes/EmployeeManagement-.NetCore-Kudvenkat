@@ -7,6 +7,7 @@ using EmployeeManagementUsingIdentity.Models.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,6 +29,18 @@ namespace EmployeeManagementUsingIdentity
             services.AddMvc(rydooption => rydooption.EnableEndpointRouting = false).AddXmlSerializerFormatters();
 
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(_rydoconfig.GetConnectionString("EmployeeDBConnection")));
+
+            services.AddIdentity<IdentityUser, IdentityRole>(rydoconfigureoptions=> {
+                rydoconfigureoptions.Password.RequiredLength = 10;
+                rydoconfigureoptions.Password.RequiredUniqueChars = 3;
+            }) // Add Identity services to the App. 
+            .AddEntityFrameworkStores<AppDbContext>(); // Using Entity Framework core to retrieve user and role information from the underlying sql servr databas using EF Core.
+
+            services.Configure<IdentityOptions>(rydoconfigureoptions =>
+            {
+                rydoconfigureoptions.Password.RequiredLength = 10;
+                rydoconfigureoptions.Password.RequiredUniqueChars = 3;
+            });
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
@@ -37,11 +50,12 @@ namespace EmployeeManagementUsingIdentity
             }
             else
             {
-              app.UseExceptionHandler("/ErrorController");
-               app.UseStatusCodePagesWithReExecute("/ErrorController/{0}");
+              app.UseExceptionHandler("/Error");
+               app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
 
             app.UseStaticFiles();
+            app.UseAuthentication(); // We want to authenticate users before the request reached the useMVC Middlewares
 
             app.UseMvc(rydoroute =>
             {
