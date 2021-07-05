@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using EmployeeManagementUsingIdentity.Models;
 using EmployeeManagementUsingIdentity.Models.Services;
 using EmployeeManagementUsingIdentity.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ using Microsoft.Extensions.Logging;
 
 namespace EmployeeManagementUsingIdentity.Controllers
 {
+
     public class HomeController : Controller
     {
         private readonly IEmployeeRepository rydorepo;
@@ -27,6 +29,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
         }
 
         [Route("~/")]
+        [AllowAnonymous]
         public IActionResult Index()
         {
             IEnumerable<Employee> rydoemplist = rydorepo.GetEmployee();
@@ -35,7 +38,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
         public IActionResult Details(int? Id)
         {
-            throw new Exception();
+            //throw new Exception();
             Employee emp = rydorepo.GetEmployee(Id ?? 1);
             return View(emp);
         }

@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using EmployeeManagementUsingIdentity.ViewModelsIdentity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagementUsingIdentity.Controllers
 {
+    // Authorise Attribute Set at Global Level.
     public class AccountController : Controller
     {
         private readonly UserManager<IdentityUser> rydoUserManager;
@@ -21,12 +23,14 @@ namespace EmployeeManagementUsingIdentity.Controllers
             this.rydoSignInManager = rydoSignInManager;
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Register()
         {
             return View();
         }
 
+        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel rydomodel)
         {
@@ -45,6 +49,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
                 if(result.Succeeded)
                 {
                     await rydoSignInManager.SignInAsync(rydouser, isPersistent: false);
+                    return RedirectToAction("Index", "Home");
                 }
 
                 foreach(var error in result.Errors)
@@ -62,14 +67,16 @@ namespace EmployeeManagementUsingIdentity.Controllers
             return RedirectToAction("index", "Home");
         }
 
+        [AllowAnonymous]
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
+        [AllowAnonymous]
         [HttpPost]
-        public async Task<IActionResult> Login(LoginViewModel rydomodel)
+        public async Task<IActionResult> Login(LoginViewModel rydomodel, string returnURL)
         {
             if(ModelState.IsValid)
             {
@@ -77,7 +84,21 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
                 if(result.Succeeded)
                 {
-                    return RedirectToAction("index", "Home");
+                    //Way 1
+                    if(!string.IsNullOrEmpty(returnURL) && Url.IsLocalUrl(returnURL))
+                    {
+                        return Redirect(returnURL); // This can redirect to non local URLS if you remove the check : Url.IsLocalUrl(returnURL)
+                    }
+                    // Way 2
+                    //if (!string.IsNullOrEmpty(returnURL))
+                    //{
+                    //    return LocalRedirect(returnURL);
+                    //}
+                    else
+                    {
+                        return RedirectToAction("index", "Home"); // If the return URL is an external URL then we will be moved to the index page.
+                    }
+                    
                 }
                 ModelState.AddModelError(string.Empty, "Invalid Login Attempt");
             }
