@@ -29,7 +29,7 @@ namespace EmployeeManagementUsingIdentity
         {
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
             services.AddMvc(rydooption => {
-                rydooption.EnableEndpointRouting = false;
+                rydooption.EnableEndpointRouting = false; // Need it to use app.UseMvc() middleware.
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build(); // This policy says to add authorise attribute to all the controllers in this project.
                 rydooption.Filters.Add(new AuthorizeFilter(policy)); // Adding this policy as a filter
             }).AddXmlSerializerFormatters();
