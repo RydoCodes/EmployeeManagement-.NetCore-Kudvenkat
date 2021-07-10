@@ -37,8 +37,10 @@ namespace EmployeeManagementUsingIdentity
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(_rydoconfig.GetConnectionString("EmployeeDBConnection")));
 
             services.AddIdentity<IdentityUser, IdentityRole>(rydoconfigureoptions=> {
-                rydoconfigureoptions.Password.RequiredLength = 5;
+                rydoconfigureoptions.Password.RequiredLength = 2;
                 rydoconfigureoptions.Password.RequiredUniqueChars = 0;
+                rydoconfigureoptions.Password.RequireUppercase = false;
+                rydoconfigureoptions.Password.RequireNonAlphanumeric = false;
             }) // Add Identity services to the App. 
             .AddEntityFrameworkStores<AppDbContext>(); // Using Entity Framework core to retrieve user and role information from the underlying sql servr databas using EF Core.
 

@@ -30,6 +30,25 @@ namespace EmployeeManagementUsingIdentity.Controllers
             return View();
         }
 
+        // We want below actionmethod to respond to only GET and POST Request
+        // If we do not specify anything then it will respond to all types of request.
+       // [HttpGet] [HttpPost] // Way 1
+
+        [AcceptVerbs("Get","Post")] // Way 2
+        [AllowAnonymous]
+        public async Task<IActionResult> IsEmailInUse(string email) // ASP NET core remote validation
+        {
+            var user = await rydoUserManager.FindByEmailAsync(email);
+            if(user==null)
+            {
+                return Json(true);
+            }
+            else
+            {
+                return Json($"Email {email} is already in user. Contact RydoGear");
+            }
+        }
+
         [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel rydomodel)
