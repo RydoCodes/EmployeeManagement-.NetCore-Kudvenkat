@@ -13,7 +13,7 @@ namespace EmployeeManagementUsingIdentity.ViewModelsIdentity
 
         [Required]
         [EmailAddress]
-       // [Remote(action: "IsEmailInUse",controller:"Account")] // ASP NET core remote validation
+        [Remote(action: "IsEmailInUse",controller:"Account")] // ASP NET core remote validation
         [ValidEmailDomain(allowedDomain: "rydogear.com", ErrorMessage ="You should be part of rydogear.com :)")]
         public string Email { get; set; }
 
@@ -26,5 +26,7 @@ namespace EmployeeManagementUsingIdentity.ViewModelsIdentity
         [Compare("Password",
             ErrorMessage = "Password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        public string City { get; set; }
     }
 }

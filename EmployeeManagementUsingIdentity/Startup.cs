@@ -36,7 +36,7 @@ namespace EmployeeManagementUsingIdentity
 
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(_rydoconfig.GetConnectionString("EmployeeDBConnection")));
 
-            services.AddIdentity<IdentityUser, IdentityRole>(rydoconfigureoptions=> {
+            services.AddIdentity<ApplicationUser, IdentityRole>(rydoconfigureoptions=> {
                 rydoconfigureoptions.Password.RequiredLength = 2;
                 rydoconfigureoptions.Password.RequiredUniqueChars = 0;
                 rydoconfigureoptions.Password.RequireUppercase = false;

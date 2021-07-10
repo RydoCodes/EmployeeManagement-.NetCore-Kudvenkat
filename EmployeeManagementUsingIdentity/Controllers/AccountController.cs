@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using EmployeeManagementUsingIdentity.Models;
 using EmployeeManagementUsingIdentity.ViewModelsIdentity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -12,12 +13,12 @@ namespace EmployeeManagementUsingIdentity.Controllers
     // Authorise Attribute Set at Global Level.
     public class AccountController : Controller
     {
-        private readonly UserManager<IdentityUser> rydoUserManager;
-        private readonly SignInManager<IdentityUser> rydoSignInManager;
+        private readonly UserManager<ApplicationUser> rydoUserManager;
+        private readonly SignInManager<ApplicationUser> rydoSignInManager;
 
         // Create a new user, using UserManager service provided by asp.net core identity.
         //Sign-in a user using SignInManager service provided by asp.net core identity.
-        public AccountController(UserManager<IdentityUser> rydoUserManager, SignInManager<IdentityUser> rydoSignInManager)
+        public AccountController(UserManager<ApplicationUser> rydoUserManager, SignInManager<ApplicationUser> rydoSignInManager)
         {
             this.rydoUserManager = rydoUserManager;
             this.rydoSignInManager = rydoSignInManager;
@@ -56,11 +57,11 @@ namespace EmployeeManagementUsingIdentity.Controllers
             if(ModelState.IsValid)
             {
                 // We are creating a IdentityUser Type and binding rydomodel to it because rydouserManager takes IdentityUser Type as Generic Parameter.
-                var rydouser = new IdentityUser
+                var rydouser = new ApplicationUser
                 {
                     UserName = rydomodel.Email,
-                    Email = rydomodel.Email
-
+                    Email = rydomodel.Email,
+                    City = rydomodel.City
                 };
 
                 var result = await rydoUserManager.CreateAsync(rydouser, rydomodel.Password);
