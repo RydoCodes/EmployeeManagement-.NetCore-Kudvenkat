@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc;
+using EmployeeManagementUsingIdentity.RydoUtilities;
 
 namespace EmployeeManagementUsingIdentity.ViewModelsIdentity
 {
@@ -12,7 +13,8 @@ namespace EmployeeManagementUsingIdentity.ViewModelsIdentity
 
         [Required]
         [EmailAddress]
-        [Remote(action: "IsEmailInUse",controller:"Account")] // ASP NET core remote validation
+       // [Remote(action: "IsEmailInUse",controller:"Account")] // ASP NET core remote validation
+        [ValidEmailDomain(allowedDomain: "rydogear.com", ErrorMessage ="You should be part of rydogear.com :)")]
         public string Email { get; set; }
 
         [Required]
