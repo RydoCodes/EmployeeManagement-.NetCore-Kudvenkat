@@ -37,7 +37,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
                 if(result.Succeeded)
                 {
-                    return RedirectToAction("Index", "Home");
+                    return RedirectToAction("ListRoles", "Administration");
                 }
                 
                 foreach(IdentityError error in result.Errors)
@@ -46,6 +46,13 @@ namespace EmployeeManagementUsingIdentity.Controllers
                 }
             }
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult ListRoles()
+        {
+            var roles = rydorolemanager.Roles;
+            return View(roles);
         }
     }
 }
