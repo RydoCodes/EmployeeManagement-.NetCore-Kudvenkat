@@ -6,10 +6,13 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagementUsingIdentity.ViewModelsIdentity
 {
-    public class CreateRoleViewModel
+    public class EditRoleViewModel
     {
-        [Required]
-        [MaxLength(8,ErrorMessage ="RydoGear does not allow you enter more than 8 characters here")]
+        public string Id { get; set; }
+
+        [Required(ErrorMessage ="Role Name is required")]
         public string RoleName { get; set; }
+
+        public List<string> Users { get; set; }
     }
 }
