@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagementUsingIdentity.Controllers
 {
-    
+    [Authorize(Roles="Admin")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> rydorolemanager;
@@ -29,7 +29,6 @@ namespace EmployeeManagementUsingIdentity.Controllers
         }
 
         [Route("~/")]
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult ListRoles()
         {
