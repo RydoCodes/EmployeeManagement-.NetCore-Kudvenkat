@@ -28,7 +28,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
             this.rydolog = rydolog;
         }
 
-        [Route("~/")]
+        //[Route("~/")]
         [AllowAnonymous]
         public IActionResult Index()
         {

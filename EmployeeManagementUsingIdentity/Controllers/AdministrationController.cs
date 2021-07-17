@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using EmployeeManagementUsingIdentity.Models;
 using EmployeeManagementUsingIdentity.ViewModelsIdentity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EmployeeManagementUsingIdentity.Controllers
 {
+    
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> rydorolemanager;
@@ -25,6 +27,16 @@ namespace EmployeeManagementUsingIdentity.Controllers
         {
             return View();
         }
+
+        [Route("~/")]
+        [AllowAnonymous]
+        [HttpGet]
+        public IActionResult ListRoles()
+        {
+            var roles = rydorolemanager.Roles;
+            return View(roles);
+        }
+
 
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel rydomodel)
@@ -52,13 +64,6 @@ namespace EmployeeManagementUsingIdentity.Controllers
         }
 
         [HttpGet]
-        public IActionResult ListRoles()
-        {
-            var roles = rydorolemanager.Roles;
-            return View(roles);
-        }
-
-        [HttpGet]
         public async Task<IActionResult> EditRole(string id)
         {
             var role = await rydorolemanager.FindByIdAsync(id);
@@ -72,7 +77,8 @@ namespace EmployeeManagementUsingIdentity.Controllers
             var model = new EditRoleViewModel
             {
                 Id = role.Id,
-                RoleName= role.Name
+                RoleName = role.Name,
+                Users = new List<string>()
             };
 
             foreach(var user in rydousermanager.Users)
@@ -112,5 +118,76 @@ namespace EmployeeManagementUsingIdentity.Controllers
                 return View(rydomodel);
             }
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EditUsersInRole(string roleId)
+        {
+            ViewBag.RoleId = roleId;
+
+            var role = await rydorolemanager.FindByIdAsync(roleId);
+
+            if(role==null)
+            {
+                ViewBag.ErrorMessage = $"Role with Id = {roleId} is not found";
+                return View("NotFound");
+            }
+
+            var rydomodelList = new List<UserRoleViewModel>();
+
+            foreach(var user in rydousermanager.Users)
+            {
+                var userroleviewmodel = new UserRoleViewModel
+                {
+                    UserId = user.Id,
+                    Username = user.UserName
+                };
+
+                if(await rydousermanager.IsInRoleAsync(user,role.Name))
+                {
+                    userroleviewmodel.IsSelected = true;
+                }
+                else
+                {
+                    userroleviewmodel.IsSelected = false;
+                }
+
+                rydomodelList.Add(userroleviewmodel);   
+            }
+
+            return View(rydomodelList);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUsersInRole(List<UserRoleViewModel> lstrydomodel, string roleId)
+        {
+            var role = await rydorolemanager.FindByIdAsync(roleId);
+
+            if (role == null)
+            {
+                ViewBag.ErrorMessage = $"Role with Id = {roleId} is not found";
+                return View("NotFound");
+            }
+
+            for(int i=0; i< lstrydomodel.Count;  i++)
+            {
+                var user = await rydousermanager.FindByIdAsync(lstrydomodel[i].UserId);
+
+                IdentityResult result = null;
+
+                if(lstrydomodel[i].IsSelected && !(await rydousermanager.IsInRoleAsync(user,role.Name))) // if you selected a user and user is not in role then add that user to role
+                {
+                    result = await rydousermanager.AddToRoleAsync(user, role.Name);
+                }
+                else if (!lstrydomodel[i].IsSelected && (await rydousermanager.IsInRoleAsync(user, role.Name)))
+                {
+                    result = await rydousermanager.RemoveFromRoleAsync(user, role.Name);
+                }
+
+            }
+
+
+            return RedirectToAction("EditRole", new { Id = roleId });
+        }
+
     }
 }
