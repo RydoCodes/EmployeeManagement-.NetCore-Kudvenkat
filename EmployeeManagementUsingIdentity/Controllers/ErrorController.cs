@@ -35,7 +35,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
             return View();
         }
 
-        // This is route is set for invalid URLS : handled by middleware : app.UseStatusCodePagesWithReExecute("/ErrorController/{0}");
+        // This is route is set incase there is any error occured at statuscoderesult.path : handled by middleware :  app.UseExceptionHandler("/Error");
         [AllowAnonymous]
         [Route("ErrorController")]
         public IActionResult Error()

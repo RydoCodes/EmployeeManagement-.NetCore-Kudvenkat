@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EmployeeManagementUsingIdentity.Controllers
 {
     // Authorise Attribute Set at Global Level.
+    [AllowAnonymous]
     public class AccountController : Controller
     {
         private readonly UserManager<ApplicationUser> rydoUserManager;
@@ -24,7 +25,6 @@ namespace EmployeeManagementUsingIdentity.Controllers
             this.rydoSignInManager = rydoSignInManager;
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult Register()
         {
@@ -36,7 +36,6 @@ namespace EmployeeManagementUsingIdentity.Controllers
        // [HttpGet] [HttpPost] // Way 1
 
         [AcceptVerbs("Get","Post")] // Way 2
-        [AllowAnonymous]
         public async Task<IActionResult> IsEmailInUse(string email) // ASP NET core remote validation
         {
             var user = await rydoUserManager.FindByEmailAsync(email);
@@ -50,7 +49,6 @@ namespace EmployeeManagementUsingIdentity.Controllers
             }
         }
 
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel rydomodel)
         {
@@ -87,14 +85,12 @@ namespace EmployeeManagementUsingIdentity.Controllers
             return RedirectToAction("index", "Home");
         }
 
-        [AllowAnonymous]
         [HttpGet]
         public IActionResult Login()
         {
             return View();
         }
 
-        [AllowAnonymous]
         [HttpPost]
         public async Task<IActionResult> Login(LoginViewModel rydomodel, string returnURL)
         {
@@ -124,6 +120,15 @@ namespace EmployeeManagementUsingIdentity.Controllers
             }
 
             return View(rydomodel);
+        }
+
+        // If you wonder why .Net Core redirects unauthorized user to Account/AccessDenied, it appears to be one of default paths: https://github.com/dotnet/aspnetcore/blob/master/src/Security/Authentication/Cookies/src/CookieAuthenticationDefaults.cs
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
     }
 }

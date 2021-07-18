@@ -1,0 +1,2 @@
+When new user register on website which role by default they have? Admin role can edit and delete but in this project every login user can do. How to prevent this on role base in asp.net core.
+

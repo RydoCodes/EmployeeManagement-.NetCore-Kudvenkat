@@ -52,6 +52,12 @@ namespace EmployeeManagementUsingIdentity
 
             services.ConfigureApplicationCookie(rydooptions => rydooptions.LoginPath = "/RydoTechs/Account/LogIn");
             // By Default If you are trying to access an action method with Authorise Attribute on it then the return url is : /Account/LogIn. We might want to override that using below code.
+
+            services.ConfigureApplicationCookie(rydooptions =>
+            {
+                rydooptions.LoginPath = "/RydoTechs/Account/LogIn"; // By Default If you are trying to access an action method with Authorise Attribute on it then the return url is : /Account/LogIn. We might want to override that using below code.
+                rydooptions.AccessDeniedPath = "/RydoTechs/Account/AccessDenied"; // By Default If you are trying to access an action method with Authorise Attribute on it but not fulffing the specified role mentioned with it then the return url is : /Account/AccessDeied. We might want to override that using below code.
+            });
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

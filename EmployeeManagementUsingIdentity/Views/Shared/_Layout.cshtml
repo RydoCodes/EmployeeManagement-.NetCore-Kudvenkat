@@ -42,9 +42,15 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="home" asp-action="create">Create</a>
                     </li>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Administration" asp-action="ListRoles">Manage Roles</a>
+                        </li>
+                    }
                 </ul>   
                 <ul class="navbar-nav ml-auto">
-                    @if (rydosigninviewmanager.IsSignedIn(User)) // Logging out a user using get request is not recommended because this approach be abused.
+                    @if (rydosigninviewmanager.IsSignedIn(User)) // Logging out a user ussing get request is not recommended because this approach be abused.
                     {
                         <li class="nav-item">
                             <form method="post" asp-controller="account" asp-action="logout">
