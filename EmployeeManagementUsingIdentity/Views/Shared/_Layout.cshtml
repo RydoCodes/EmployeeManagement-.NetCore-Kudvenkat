@@ -42,13 +42,21 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="home" asp-action="create">Create</a>
                     </li>
-                    @if (User.IsInRole("Admin"))
+                    @if (User.IsInRole("Admin")) 
                     {
-                        <li class="nav-item">
-                            <a class="nav-link" asp-controller="Administration" asp-action="ListRoles">Manage Roles</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
+                               data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" asp-controller="Administration"
+                                   asp-action="ListUsers">Rydo Users</a>
+                                <a class="dropdown-item" asp-controller="Administration"
+                                   asp-action="ListRoles">Rydo Roles</a>
+                            </div>
                         </li>
                     }
-                </ul>   
+                </ul>
                 <ul class="navbar-nav ml-auto">
                     @if (rydosigninviewmanager.IsSignedIn(User)) // Logging out a user ussing get request is not recommended because this approach be abused.
                     {

@@ -66,6 +66,10 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
                 if(result.Succeeded)
                 {
+                    if(User.IsInRole("Admin"))
+                    {
+                        return RedirectToAction("ListUsers", "Administration");
+                    }
                     await rydoSignInManager.SignInAsync(rydouser, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }

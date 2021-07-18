@@ -28,6 +28,13 @@ namespace EmployeeManagementUsingIdentity.Controllers
             return View();
         }
 
+        [HttpGet]
+        public IActionResult ListUsers()
+        {
+            var users = rydousermanager.Users;
+            return View(users);
+        }
+
         [Route("~/")]
         [HttpGet]
         public IActionResult ListRoles()
