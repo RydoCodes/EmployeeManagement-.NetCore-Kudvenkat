@@ -10,6 +10,7 @@
         <script src="~/lib/jquery/jquery.js"></script>
         <script src="~/lib/jquery-validate/jquery.validate.js"></script>
         <script src="~/lib/twitter-bootstrap/js/bootstrap.js"></script>
+        <script src="~/lib/twitter-bootstrap/js/bootstrap.bundle.js"></script>
         <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
     </environment>
     <environment exclude="Development">
@@ -42,9 +43,10 @@
                     <li class="nav-item">
                         <a class="nav-link" asp-controller="home" asp-action="create">Create</a>
                     </li>
-                    @if (User.IsInRole("Admin")) 
+                    @if (User.IsInRole("Admin"))
                     {
-                        <li class="nav-item dropdown">
+                                    // Below didnot work so commented
+                                    @*<li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink"
                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Manage
                             </a>
@@ -54,6 +56,13 @@
                                 <a class="dropdown-item" asp-controller="Administration"
                                    asp-action="ListRoles">Rydo Roles</a>
                             </div>
+                        </li>*@
+
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Administration" asp-action="ListUsers">Rydo Users</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Administration" asp-action="ListRoles">Rydo Roles</a>
                         </li>
                     }
                 </ul>

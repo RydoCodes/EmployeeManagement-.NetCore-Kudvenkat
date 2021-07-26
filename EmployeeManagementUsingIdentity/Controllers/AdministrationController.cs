@@ -22,11 +22,8 @@ namespace EmployeeManagementUsingIdentity.Controllers
             this.rydousermanager = rydousermanager;
         }
 
-        [HttpGet]
-        public IActionResult CreateRole()
-        {
-            return View();
-        }
+        #region Users
+
 
         [HttpGet]
         public IActionResult ListUsers()
@@ -34,6 +31,70 @@ namespace EmployeeManagementUsingIdentity.Controllers
             var users = rydousermanager.Users;
             return View(users);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> EditUser(string id)
+        {
+            var rydouser = await rydousermanager.FindByIdAsync(id);
+
+            if(rydouser==null)
+            {
+                ViewBag.ErrorMessage = $"User with {id} not Found";
+                return View("Not Found");
+            }
+
+             
+            var rydouserClaims = await rydousermanager.GetClaimsAsync(rydouser); // This returns us the list of all claims of the user that is passed as parameter.
+            var rydouserRoles = await rydousermanager.GetRolesAsync(rydouser); // returns list of all roles associated with this user.
+
+            EditUserViewModel rydoevm = new EditUserViewModel()
+            {
+                id = rydouser.Id,
+                UserName = rydouser.UserName,
+                City = rydouser.City,
+                Email = rydouser.Email,
+                Claims = rydouserClaims.Select(c => c.Value).ToList(), // You wantt to get a List of value property of class Claims.
+                Roles = rydouserRoles
+
+            };
+
+            return View(rydoevm);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditUser(EditUserViewModel rydomodel)
+        {
+            var rydouser = await rydousermanager.FindByIdAsync(rydomodel.id);
+
+            if (rydouser == null)
+            {
+                ViewBag.ErrorMessage = $"User with {rydomodel.id} not Found";
+                return View("Not Found");
+            }
+            else
+            {
+                rydouser.Email = rydomodel.Email;
+                rydouser.City = rydomodel.City;
+                rydouser.UserName = rydomodel.UserName;
+
+                var result = await rydousermanager.UpdateAsync(rydouser);
+
+                if(result.Succeeded)
+                {
+                    return RedirectToAction("ListUsers");
+                }
+
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return View(rydomodel);
+            }
+        }
+
+        #endregion
+
+        #region Roles
 
         [Route("~/")]
         [HttpGet]
@@ -43,6 +104,13 @@ namespace EmployeeManagementUsingIdentity.Controllers
             return View(roles);
         }
 
+        
+
+        [HttpGet]
+        public IActionResult CreateRole()
+        {
+            return View();
+        }
 
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel rydomodel)
@@ -124,6 +192,8 @@ namespace EmployeeManagementUsingIdentity.Controllers
                 return View(rydomodel);
             }
         }
+
+        #endregion
 
         [HttpGet]
         public async Task<IActionResult> EditUsersInRole(string roleId)
