@@ -92,6 +92,34 @@ namespace EmployeeManagementUsingIdentity.Controllers
             }
         }
 
+        [HttpPost ]
+        public async Task<IActionResult> DeleteUser(string id)
+        {
+            var rydouser = await rydousermanager.FindByIdAsync(id);
+
+            if (rydouser == null)
+            {
+                ViewBag.ErrorMessage = $"User with {id} not Found";
+                return View("Not Found");
+            }
+
+             var result = await rydousermanager.DeleteAsync(rydouser);
+
+            if (result.Succeeded)
+            {
+                return RedirectToAction("ListUsers");
+            }
+            else
+            {
+                foreach(var error in result.Errors)
+                {
+                    ModelState.AddModelError("", error.Description);
+                }
+                return View("ListUsers");
+            }
+
+        }
+
         #endregion
 
         #region Roles
