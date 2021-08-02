@@ -19,6 +19,12 @@ namespace EmployeeManagementUsingIdentity.Models
         {
             base.OnModelCreating(modelBuilder); // Not including this causes error while adding migration : The entity type 'IdentityUserLogin<string>' requires a primary key to be defined
             modelBuilder.RydoSeed();
+
+            // Enforce ON DELETE NO ACTION in entity framework core when trying to delete the role from CASCADE to RESTRICT via Code. 
+            foreach (var rydoforeignkey in  modelBuilder.Model.GetEntityTypes().SelectMany(e=> e.GetForeignKeys()))
+            {
+                rydoforeignkey.DeleteBehavior = DeleteBehavior.Restrict;
+            }
         }
     }
 }
