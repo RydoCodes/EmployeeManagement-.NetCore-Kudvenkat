@@ -7,6 +7,8 @@ using EmployeeManagementUsingIdentity.ViewModelsIdentity;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace EmployeeManagementUsingIdentity.Controllers
 {
@@ -15,11 +17,13 @@ namespace EmployeeManagementUsingIdentity.Controllers
     {
         private readonly RoleManager<IdentityRole> rydorolemanager;
         private readonly UserManager<ApplicationUser> rydousermanager;
+        private readonly ILogger<AdministrationController> rydologger;
 
-        public AdministrationController(RoleManager<IdentityRole> rydorolemanager, UserManager<ApplicationUser> rydousermanager)
+        public AdministrationController(RoleManager<IdentityRole> rydorolemanager, UserManager<ApplicationUser> rydousermanager,ILogger<AdministrationController> rydologger)
         {
             this.rydorolemanager = rydorolemanager;
             this.rydousermanager = rydousermanager;
+            this.rydologger = rydologger;
         }
 
         #region Users
@@ -233,17 +237,28 @@ namespace EmployeeManagementUsingIdentity.Controllers
             }
             else
             {
-                var result = await rydorolemanager.DeleteAsync(role);
-                if (result.Succeeded)
+                try
                 {
-                    return RedirectToAction("ListRoles");
-                }
+                    var result = await rydorolemanager.DeleteAsync(role);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("ListRoles");
+                    }
 
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                    return View("ListRoles");
                 }
-                return View("ListRoles");
+                catch(DbUpdateException ex)
+                {
+                    rydologger.LogError($"Error deleting role{ex.ToString()}");
+
+                    ViewBag.ErrorTitle = $"{role.Name} is in use";
+                    ViewBag.ErrorMessage = $"{role.Name} role cannot be deleted as there are users in this role. If you want to delete this role, please remove the users from the role and then try to delete";
+                    return View("~/Views/Error/Error.cshtml");
+                }
             }
         }
 

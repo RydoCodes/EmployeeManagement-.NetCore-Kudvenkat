@@ -19,7 +19,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
         }
 
         // This is route is set for invalid URLS : handled by middleware : app.UseStatusCodePagesWithReExecute("/ErrorController/{0}");
-        [Route("/ErrorController/{statuscode}")]
+        [Route("/Error/{statuscode}")]
         public IActionResult NotFound(int statuscode)
         {
             var statuscoderesult = HttpContext.Features.Get<IStatusCodeReExecuteFeature>();
@@ -37,7 +37,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
         // This is route is set incase there is any error occured at statuscoderesult.path : handled by middleware :  app.UseExceptionHandler("/Error");
         [AllowAnonymous]
-        [Route("ErrorController")]
+        [Route("Error")]
         public IActionResult Error()
         {
             var statuscoderesult = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
