@@ -12,14 +12,14 @@ using Microsoft.Extensions.Logging;
 
 namespace EmployeeManagementUsingIdentity.Controllers
 {
-    [Authorize(Roles="Admin")]
+    [Authorize(Roles = "Admin")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> rydorolemanager;
         private readonly UserManager<ApplicationUser> rydousermanager;
         private readonly ILogger<AdministrationController> rydologger;
 
-        public AdministrationController(RoleManager<IdentityRole> rydorolemanager, UserManager<ApplicationUser> rydousermanager,ILogger<AdministrationController> rydologger)
+        public AdministrationController(RoleManager<IdentityRole> rydorolemanager, UserManager<ApplicationUser> rydousermanager, ILogger<AdministrationController> rydologger)
         {
             this.rydorolemanager = rydorolemanager;
             this.rydousermanager = rydousermanager;
@@ -41,13 +41,13 @@ namespace EmployeeManagementUsingIdentity.Controllers
         {
             var rydouser = await rydousermanager.FindByIdAsync(id);
 
-            if(rydouser==null)
+            if (rydouser == null)
             {
                 ViewBag.ErrorMessage = $"User with {id} not Found";
                 return View("Not Found");
             }
 
-             
+
             var rydouserClaims = await rydousermanager.GetClaimsAsync(rydouser); // This returns us the list of all claims of the user that is passed as parameter.
             var rydouserRoles = await rydousermanager.GetRolesAsync(rydouser); // returns list of all roles associated with this user.
 
@@ -83,12 +83,12 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
                 var result = await rydousermanager.UpdateAsync(rydouser);
 
-                if(result.Succeeded)
+                if (result.Succeeded)
                 {
                     return RedirectToAction("ListUsers");
                 }
 
-                foreach(var error in result.Errors)
+                foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
                 }
@@ -96,7 +96,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
             }
         }
 
-        [HttpPost ]
+        [HttpPost]
         public async Task<IActionResult> DeleteUser(string id)
         {
             var rydouser = await rydousermanager.FindByIdAsync(id);
@@ -107,7 +107,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
                 return View("Not Found");
             }
 
-             var result = await rydousermanager.DeleteAsync(rydouser);
+            var result = await rydousermanager.DeleteAsync(rydouser);
 
             if (result.Succeeded)
             {
@@ -115,7 +115,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
             }
             else
             {
-                foreach(var error in result.Errors)
+                foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
                 }
@@ -136,7 +136,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
             return View(roles);
         }
 
-        
+
 
         [HttpGet]
         public IActionResult CreateRole()
@@ -147,23 +147,23 @@ namespace EmployeeManagementUsingIdentity.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateRole(CreateRoleViewModel rydomodel)
         {
-            if(ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 IdentityRole identityRole = new IdentityRole
                 {
-                    Name= rydomodel.RoleName
+                    Name = rydomodel.RoleName
                 };
 
-                IdentityResult result =  await rydorolemanager.CreateAsync(identityRole);
+                IdentityResult result = await rydorolemanager.CreateAsync(identityRole);
 
-                if(result.Succeeded)
+                if (result.Succeeded)
                 {
                     return RedirectToAction("ListRoles", "Administration");
                 }
-                
-                foreach(IdentityError error in result.Errors)
+
+                foreach (IdentityError error in result.Errors)
                 {
-                    ModelState.AddModelError("",error.Description);
+                    ModelState.AddModelError("", error.Description);
                 }
             }
             return View();
@@ -174,7 +174,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
         {
             var role = await rydorolemanager.FindByIdAsync(id);
 
-            if(role==null)
+            if (role == null)
             {
                 ViewBag.ErrorMessage = $"Role with Id {id} cannot be found";
                 return View("NotFound");
@@ -187,9 +187,9 @@ namespace EmployeeManagementUsingIdentity.Controllers
                 Users = new List<string>()
             };
 
-            foreach(var user in rydousermanager.Users)
+            foreach (var user in rydousermanager.Users)
             {
-                if(await rydousermanager.IsInRoleAsync(user, role.Name))
+                if (await rydousermanager.IsInRoleAsync(user, role.Name))
                 {
                     model.Users.Add(user.UserName);
                 }
@@ -212,12 +212,12 @@ namespace EmployeeManagementUsingIdentity.Controllers
             {
                 role.Name = rydomodel.RoleName;
                 var result = await rydorolemanager.UpdateAsync(role);
-                if(result.Succeeded)
+                if (result.Succeeded)
                 {
                     return RedirectToAction("ListRoles");
                 }
 
-                foreach(var error in result.Errors)
+                foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError("", error.Description);
                 }
@@ -251,7 +251,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
                     }
                     return View("ListRoles");
                 }
-                catch(DbUpdateException ex)
+                catch (DbUpdateException ex)
                 {
                     rydologger.LogError($"Error deleting role{ex.ToString()}");
 
@@ -271,7 +271,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
             var role = await rydorolemanager.FindByIdAsync(roleId);
 
-            if(role==null)
+            if (role == null)
             {
                 ViewBag.ErrorMessage = $"Role with Id = {roleId} is not found";
                 return View("NotFound");
@@ -279,7 +279,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
             var rydomodelList = new List<UserRoleViewModel>();
 
-            foreach(var user in rydousermanager.Users)
+            foreach (var user in rydousermanager.Users)
             {
                 var userroleviewmodel = new UserRoleViewModel
                 {
@@ -287,7 +287,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
                     Username = user.UserName
                 };
 
-                if(await rydousermanager.IsInRoleAsync(user,role.Name))
+                if (await rydousermanager.IsInRoleAsync(user, role.Name))
                 {
                     userroleviewmodel.IsSelected = true;
                 }
@@ -296,7 +296,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
                     userroleviewmodel.IsSelected = false;
                 }
 
-                rydomodelList.Add(userroleviewmodel);   
+                rydomodelList.Add(userroleviewmodel);
             }
 
             return View(rydomodelList);
@@ -313,13 +313,13 @@ namespace EmployeeManagementUsingIdentity.Controllers
                 return View("NotFound");
             }
 
-            for(int i=0; i< lstrydomodel.Count;  i++)
+            for (int i = 0; i < lstrydomodel.Count; i++)
             {
                 var user = await rydousermanager.FindByIdAsync(lstrydomodel[i].UserId);
 
                 IdentityResult result = null;
 
-                if(lstrydomodel[i].IsSelected && !(await rydousermanager.IsInRoleAsync(user,role.Name))) // if you selected a user and user is not in role then add that user to role
+                if (lstrydomodel[i].IsSelected && !(await rydousermanager.IsInRoleAsync(user, role.Name))) // if you selected a user and user is not in role then add that user to role
                 {
                     result = await rydousermanager.AddToRoleAsync(user, role.Name);
                 }
@@ -332,6 +332,75 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
 
             return RedirectToAction("EditRole", new { Id = roleId });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ManageUserRoles(string userId)
+        {
+
+            ViewBag.userId = userId;
+
+            var rydouser = await rydousermanager.FindByIdAsync(userId);
+
+            if (rydouser == null)
+            {
+                ViewBag.ErrorMessage = $"User with Id = {userId} cannot be found";
+                return View("NotFound");
+            }
+
+            var rydomodel = new List<UserRolesViewModel>();
+
+            foreach (var rydorole in rydorolemanager.Roles)
+            {
+                var userRolesViewModel = new UserRolesViewModel()
+                {
+                    RoleId = rydorole.Id,
+                    RoleName = rydorole.Name
+                };
+
+                userRolesViewModel.IsSelected = await rydousermanager.IsInRoleAsync(rydouser, rydorole.Name) ? true : false;
+
+                rydomodel.Add(userRolesViewModel);
+            }
+
+            return View(rydomodel);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ManageUserRoles(List<UserRolesViewModel> rydomodel,string userId)
+        {
+            var rydouser = await rydousermanager.FindByIdAsync(userId);
+
+            if(rydouser==null)
+            {
+                ViewBag.ErrorMessage = $"User with Id = {userId} cannot be found";
+                return View("NotFound");
+            }
+
+            // Get all Roles related to that user
+            var roles = await rydousermanager.GetRolesAsync(rydouser);
+
+            // Remove all roles from that user
+            var result = await rydousermanager.RemoveFromRolesAsync(rydouser,roles);
+
+            if(!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Cannot remove existing roles");
+                return View(rydomodel);
+            }
+            // Re Adding those roles which are now selected
+
+            var newroles = rydomodel.Where(rx => rx.IsSelected).Select(ry => ry.RoleName);
+
+            result = await rydousermanager.AddToRolesAsync(rydouser, newroles);
+
+            if(!result.Succeeded)
+            {
+                ModelState.AddModelError("", "cannot add selected roles to the user");
+                return View(rydomodel);
+            }
+
+            return RedirectToAction("EditUser",new { Id= userId });
         }
 
     }
