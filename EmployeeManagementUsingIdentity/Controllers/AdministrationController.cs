@@ -227,6 +227,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
         }
 
         [HttpPost]
+        [Authorize(Policy = "DeleteRoleRydoPolicy")] 
         public async Task<IActionResult> DeleteRole(string id)
         {
             var role = await rydorolemanager.FindByIdAsync(id);
