@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using EmployeeManagementUsingIdentity.Models;
 using EmployeeManagementUsingIdentity.ViewModelsIdentity;
@@ -264,6 +265,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
         #endregion
 
+        #region Edit & Manage UsersInRole
         [HttpGet]
         public async Task<IActionResult> EditUsersInRole(string roleId)
         {
@@ -367,11 +369,11 @@ namespace EmployeeManagementUsingIdentity.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ManageUserRoles(List<UserRolesViewModel> rydomodel,string userId)
+        public async Task<IActionResult> ManageUserRoles(List<UserRolesViewModel> rydomodel, string userId)
         {
             var rydouser = await rydousermanager.FindByIdAsync(userId);
 
-            if(rydouser==null)
+            if (rydouser == null)
             {
                 ViewBag.ErrorMessage = $"User with Id = {userId} cannot be found";
                 return View("NotFound");
@@ -381,9 +383,9 @@ namespace EmployeeManagementUsingIdentity.Controllers
             var roles = await rydousermanager.GetRolesAsync(rydouser);
 
             // Remove all roles from that user
-            var result = await rydousermanager.RemoveFromRolesAsync(rydouser,roles);
+            var result = await rydousermanager.RemoveFromRolesAsync(rydouser, roles);
 
-            if(!result.Succeeded)
+            if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "Cannot remove existing roles");
                 return View(rydomodel);
@@ -394,14 +396,90 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
             result = await rydousermanager.AddToRolesAsync(rydouser, newroles);
 
-            if(!result.Succeeded)
+            if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "cannot add selected roles to the user");
                 return View(rydomodel);
             }
 
-            return RedirectToAction("EditUser",new { Id= userId });
+            return RedirectToAction("EditUser", new { Id = userId });
         }
+        #endregion
+
+        #region Manager UserClaims
+
+        [HttpGet]
+        public async Task<IActionResult> ManageUserClaims(string userId)
+        {
+            var rydouser = await rydousermanager.FindByIdAsync(userId);
+
+            if(rydouser==null)
+            {
+                ViewBag.ErrorMessage = $"User with UserId {userId} cannot be found";
+                return View("NotFound");
+            }
+
+            var existingUserClaims = await rydousermanager.GetClaimsAsync(rydouser);
+
+            var rydomodel = new UserClaimsViewModel
+            {
+                UserId=userId
+            };
+
+            foreach(Claim claim in ClaimsStore.AllClaims)
+            {
+                UserClaim userclaim = new UserClaim
+                {
+                    ClaimType = claim.Type
+                };
+
+                if(existingUserClaims.Any(rx=>rx.Type== claim.Type))
+                {
+                    userclaim.IsSelected = true;
+                }
+
+                rydomodel.Claims.Add(userclaim);
+            }
+
+            return View(rydomodel);
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ManageUserClaims(UserClaimsViewModel rydomodel)
+        {
+            var rydouser = await rydousermanager.FindByIdAsync(rydomodel.UserId);
+
+            if (rydouser == null)
+            {
+                ViewBag.ErrorMessage = $"User with UserId {rydomodel.UserId} cannot be found";
+                return View("NotFound");
+            }
+
+            var rydoclaims = await rydousermanager.GetClaimsAsync(rydouser);
+            var result = await rydousermanager.RemoveClaimsAsync(rydouser, rydoclaims);
+
+            if(!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Cannot Remove Existing Claims");
+            }
+
+            IEnumerable<UserClaim> userclaims = rydomodel.Claims.Where(s => s.IsSelected == true);
+            IEnumerable<Claim> claimstoadd = userclaims.Select(s => new Claim(s.ClaimType, s.ClaimType));
+
+            result = await rydousermanager.AddClaimsAsync(rydouser, claimstoadd);
+
+            if(!result.Succeeded)
+            {
+                ModelState.AddModelError("", "Cannot add selected Claims to user");
+                return View(rydomodel);
+            }
+
+            return RedirectToAction("EditUser", new { Id = rydomodel.UserId });
+
+        }
+
+        #endregion
 
     }
 }
