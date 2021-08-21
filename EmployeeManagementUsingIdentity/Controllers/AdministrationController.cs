@@ -14,7 +14,7 @@ using Microsoft.Extensions.Logging;
 namespace EmployeeManagementUsingIdentity.Controllers
 {
     //[Authorize(Roles = "Admin")] // Role Based Authorization
-    [Authorize(Policy = "RydoNormalRolePolicy")]
+    [Authorize(Policy = "RydoAdminRolePolicy")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> rydorolemanager;
