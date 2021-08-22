@@ -1,5 +1,10 @@
 ﻿@model IEnumerable<IdentityRole>
 
+@using Microsoft.AspNetCore.Authorization
+
+@*Injecting this service For claim based authorization on view*@
+@inject IAuthorizationService IrydoauthorizationService
+
 @{
     ViewBag.Title = "All Roles";
 }
@@ -22,8 +27,10 @@
             </div>
             <div class="card-footer">
                 <form method="post" asp-action="DeleteRole" asp-route-id="@role.Id">
-                    <a class="btn btn-primary" asp-action="EditRole" asp-route-Id="@role.Id">Edit</a>
-
+                    @if ((await IrydoauthorizationService.AuthorizeAsync(User, "RydoEditRolePolicy")).Succeeded)
+                    {
+                        <a class="btn btn-primary" asp-action="EditRole" asp-route-Id="@role.Id">Edit</a>
+                    }
                     <span id="confirmDeleteSpan_@role.Id" style="display:none">
                         <span>Are you sure you want to delete?</span>
                         <button type="submit" class="btn btn-danger">Yes</button>
