@@ -55,18 +55,18 @@ namespace EmployeeManagementUsingIdentity
 
             services.ConfigureApplicationCookie(rydooptions =>
             {
-                rydooptions.LoginPath = "/RydoTechs/Account/LogIn"; // By Default If you are trying to access an action method with Authorise Attribute on it then the return url is : /Account/LogIn. We might want to override that using below code.
-                rydooptions.AccessDeniedPath = "/RydoTechs/Account/AccessDenied"; // By Default If you are trying to access an action method with Authorise Attribute on it but not fulffing the specified role mentioned with it then the return url is : /Account/AccessDeied. We might want to override that using below code.
+                rydooptions.LoginPath = new PathString ("/RydoTechs/Account/LogIn"); // By Default If you are trying to access an action method with Authorise Attribute on it then the return url is : /Account/LogIn. We might want to override that using below code.
+                rydooptions.AccessDeniedPath = new PathString("/RydoTechs/Account/AccessDenied"); // By Default If you are trying to access an action method with Authorise Attribute on it but not fulffing the specified role mentioned with it then the return url is : /Account/AccessDeied. We might want to override that using below code.
             });
 
 
             //Claims based authorization in asp net core
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("DeleteRoleRydoPolicy", policy => policy.RequireClaim("Delete Role"));
+                options.AddPolicy("DeleteRoleRydoClaimPolicy", policy => policy.RequireClaim("Delete Role"));
                 options.AddPolicy("RydoAdminRolePolicy", rolepolicy => rolepolicy.RequireRole("Admin"));
 
-                options.AddPolicy("RydoEditRolePolicy",rolepolicy=> rolepolicy.RequireClaim("Edit Role"));
+                options.AddPolicy("RydoEditRoleClaimPolicy",rolepolicy=> rolepolicy.RequireClaim("Edit Role"));
             });
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

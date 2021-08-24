@@ -172,7 +172,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
         }
 
         [HttpGet]
-        [Authorize(Policy = "RydoEditRolePolicy")]
+        [Authorize(Policy = "RydoEditRoleClaimPolicy")]
         public async Task<IActionResult> EditRole(string id)
         {
             var role = await rydorolemanager.FindByIdAsync(id);
@@ -202,7 +202,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "RydoEditRolePolicy")]
+        [Authorize(Policy = "RydoEditRoleClaimPolicy")]
         public async Task<IActionResult> EditRole(EditRoleViewModel rydomodel)
         {
             var role = await rydorolemanager.FindByIdAsync(rydomodel.Id);
@@ -230,7 +230,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "DeleteRoleRydoPolicy")] 
+        [Authorize(Policy = "DeleteRoleRydoClaimPolicy")] 
         public async Task<IActionResult> DeleteRole(string id)
         {
             var role = await rydorolemanager.FindByIdAsync(id);

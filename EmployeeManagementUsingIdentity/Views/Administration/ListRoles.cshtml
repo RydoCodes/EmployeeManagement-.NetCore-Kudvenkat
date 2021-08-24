@@ -27,7 +27,7 @@
             </div>
             <div class="card-footer">
                 <form method="post" asp-action="DeleteRole" asp-route-id="@role.Id">
-                    @if ((await IrydoauthorizationService.AuthorizeAsync(User, "RydoEditRolePolicy")).Succeeded)
+                    @if ((await IrydoauthorizationService.AuthorizeAsync(User, "RydoEditRoleClaimPolicy")).Succeeded)
                     {
                         <a class="btn btn-primary" asp-action="EditRole" asp-route-Id="@role.Id">Edit</a>
                     }

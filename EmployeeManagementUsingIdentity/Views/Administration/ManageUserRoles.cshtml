@@ -1,8 +1,5 @@
 ﻿@model List<UserRolesViewModel>
 
-@{ 
-    var userId = ViewBag.userId;
-}
 
 <form method="post">
     <div class="card">
@@ -27,7 +24,6 @@
         </div>
         <div class="card-footer">
             <input type="submit" value="Update" class="btn btn-primary" style="width:auto" />
-            <a asp-action="EditUser" asp-route-Id="@userId" class="btn btn-primary" style="width:auto">Cancel</a>
         </div>
     </div>
 </form>
