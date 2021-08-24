@@ -66,7 +66,7 @@ namespace EmployeeManagementUsingIdentity
                 options.AddPolicy("DeleteRoleRydoClaimPolicy", policy => policy.RequireClaim("Delete Role"));
                 options.AddPolicy("RydoAdminRolePolicy", rolepolicy => rolepolicy.RequireRole("Admin"));
 
-                options.AddPolicy("RydoEditRoleClaimPolicy",rolepolicy=> rolepolicy.RequireClaim("Edit Role"));
+                options.AddPolicy("RydoEditRoleClaimPolicy",rolepolicy=> rolepolicy.RequireClaim("Edit Role","true"));
             });
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

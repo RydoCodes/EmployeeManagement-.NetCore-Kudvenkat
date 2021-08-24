@@ -59,7 +59,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
                 UserName = rydouser.UserName,
                 City = rydouser.City,
                 Email = rydouser.Email,
-                Claims = rydouserClaims.Select(c => c.Value).ToList(), // You wantt to get a List of value property of class Claims.
+                Claims = rydouserClaims.Select(c => c.Type +":"+ c.Value).ToList(), // You wantt to get a List of value property of class Claims.
                 Roles = rydouserRoles
 
             };
@@ -437,7 +437,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
                     ClaimType = claim.Type
                 };
 
-                if(existingUserClaims.Any(rx=>rx.Type== claim.Type))
+                if(existingUserClaims.Any(rx=>rx.Type== claim.Type && rx.Value=="true"))
                 {
                     userclaim.IsSelected = true;
                 }
@@ -468,8 +468,8 @@ namespace EmployeeManagementUsingIdentity.Controllers
                 ModelState.AddModelError("", "Cannot Remove Existing Claims");
             }
 
-            IEnumerable<UserClaim> userclaims = rydomodel.Claims.Where(s => s.IsSelected == true);
-            IEnumerable<Claim> claimstoadd = userclaims.Select(s => new Claim(s.ClaimType, s.ClaimType));
+            IEnumerable<UserClaim> userclaims = rydomodel.Claims;
+            IEnumerable<Claim> claimstoadd = userclaims.Select(s => new Claim(s.ClaimType, s.IsSelected ? "true":"false" ));
 
             result = await rydousermanager.AddClaimsAsync(rydouser, claimstoadd);
 
