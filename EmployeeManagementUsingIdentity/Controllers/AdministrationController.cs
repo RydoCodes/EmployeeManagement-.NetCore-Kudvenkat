@@ -59,7 +59,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
                 UserName = rydouser.UserName,
                 City = rydouser.City,
                 Email = rydouser.Email,
-                Claims = rydouserClaims.Select(c => c.Type +":"+ c.Value).ToList(), // You wantt to get a List of value property of class Claims.
+                Claims = rydouserClaims.Select(c => c.Type +":"+ c.Value).ToList(), // You want to get a List of value property of class Claims.
                 Roles = rydouserRoles
 
             };
@@ -98,6 +98,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
             }
         }
 
+        [Authorize(Policy = "RydoDeleteRoleClaimPolicy")]
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string id)
         {
@@ -230,7 +231,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
         }
 
         [HttpPost]
-        [Authorize(Policy = "DeleteRoleRydoClaimPolicy")] 
+        [Authorize(Policy = "RydoDeleteRoleClaimPolicy")] 
         public async Task<IActionResult> DeleteRole(string id)
         {
             var role = await rydorolemanager.FindByIdAsync(id);
@@ -487,3 +488,12 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
     }
 }
+
+
+//-----rydousermanager---------
+
+//GetClaimsAsync(rydouser)
+//GetRolesAsync(rydouser)
+//FindByEmailAsync(email)
+//FindByIdAsync(id)
+//AddClaimsAsync(rydouser, claimstoadd);

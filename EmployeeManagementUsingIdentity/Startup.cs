@@ -28,6 +28,7 @@ namespace EmployeeManagementUsingIdentity
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
+
             services.AddMvc(rydooption => {
                 rydooption.EnableEndpointRouting = false; // Need it to use app.UseMvc() middleware.
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build(); // This policy says to add authorise attribute to all the controllers in this project.
@@ -50,9 +51,7 @@ namespace EmployeeManagementUsingIdentity
             //    rydoconfigureoptions.Password.RequiredUniqueChars = 3;
             //});
 
-            services.ConfigureApplicationCookie(rydooptions => rydooptions.LoginPath = "/RydoTechs/Account/LogIn");
-            // By Default If you are trying to access an action method with Authorise Attribute on it then the return url is : /Account/LogIn. We might want to override that using below code.
-
+            // Set up Custom Urls for Login Path and AccessDeniedPath
             services.ConfigureApplicationCookie(rydooptions =>
             {
                 rydooptions.LoginPath = new PathString ("/RydoTechs/Account/LogIn"); // By Default If you are trying to access an action method with Authorise Attribute on it then the return url is : /Account/LogIn. We might want to override that using below code.
@@ -63,7 +62,7 @@ namespace EmployeeManagementUsingIdentity
             //Claims based authorization in asp net core
             services.AddAuthorization(options =>
             {
-                options.AddPolicy("DeleteRoleRydoClaimPolicy", policy => policy.RequireClaim("Delete Role"));
+                options.AddPolicy("RydoDeleteRoleClaimPolicy", policy => policy.RequireClaim("Delete Role", "true"));
                 options.AddPolicy("RydoAdminRolePolicy", rolepolicy => rolepolicy.RequireRole("Admin"));
 
                 options.AddPolicy("RydoEditRoleClaimPolicy",rolepolicy=> rolepolicy.RequireClaim("Edit Role","true"));

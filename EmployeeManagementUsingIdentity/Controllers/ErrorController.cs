@@ -18,7 +18,8 @@ namespace EmployeeManagementUsingIdentity.Controllers
             this.rydologger = rydologger;
         }
 
-        // This is route is set for invalid URLS : handled by middleware : app.UseStatusCodePagesWithReExecute("/ErrorController/{0}");
+        // This route is set for invalid URLS : handled by middleware : app.UseStatusCodePagesWithReExecute("/ErrorController/{0}");
+        [AllowAnonymous]
         [Route("/Error/{statuscode}")]
         public IActionResult NotFound(int statuscode)
         {

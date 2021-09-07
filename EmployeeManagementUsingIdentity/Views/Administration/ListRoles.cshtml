@@ -31,15 +31,20 @@
                     {
                         <a class="btn btn-primary" asp-action="EditRole" asp-route-Id="@role.Id">Edit</a>
                     }
-                    <span id="confirmDeleteSpan_@role.Id" style="display:none">
-                        <span>Are you sure you want to delete?</span>
-                        <button type="submit" class="btn btn-danger">Yes</button>
-                        <a class="btn btn-primary" onclick="confirmDelete('@role.Id', false)">No</a> @*To Avoid : If the user is at the very bottom of the page, when you click the 'delete' button, the page automatically scrolls up and you are required to scroll down to see the inline confirmation*@
-                    </span>
+                    @if ((await IrydoauthorizationService.AuthorizeAsync(User, "RydoDeleteRoleClaimPolicy")).Succeeded)
+                    {
+                        <span id="confirmDeleteSpan_@role.Id" style="display:none">
 
-                    <span id="deleteSpan_@role.Id">
-                        <a class="btn btn-danger" onclick="confirmDelete('@role.Id', true)">Delete</a> @*To avoid : "If the user is at the very bottom of the page, when you click the 'delete' button, the page automatically scrolls up and you are required to scroll down to see the inline confirmation"*@
-                    </span>
+                            <span>Are you sure you want to delete?</span>
+
+                            <button type="submit" class="btn btn-danger">Yes</button>
+                            <a class="btn btn-primary" onclick="confirmDelete('@role.Id', false)">No</a> @*To Avoid : If the user is at the very bottom of the page, when you click the 'delete' button, the page automatically scrolls up and you are required to scroll down to see the inline confirmation*@
+                        </span>
+
+                        <span id="deleteSpan_@role.Id">
+                            <a class="btn btn-danger" onclick="confirmDelete('@role.Id', true)">Delete</a> @*To avoid : "If the user is at the very bottom of the page, when you click the 'delete' button, the page automatically scrolls up and you are required to scroll down to see the inline confirmation"*@
+                        </span>
+                    }
                 </form>
             </div>
         </div>
