@@ -14,7 +14,8 @@ using Microsoft.Extensions.Logging;
 namespace EmployeeManagementUsingIdentity.Controllers
 {
     //[Authorize(Roles = "Admin")] // Role Based Authorization
-    [Authorize(Policy = "RydoAdminRolePolicy")]
+    //[Authorize(Policy = "RydoAdminRolePolicy")]
+    [AllowAnonymous]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> rydorolemanager;
@@ -30,7 +31,8 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
         #region Users
 
-
+        [ResponseCache(Duration = 120)]
+        [Route("~/")]
         [HttpGet]
         public IActionResult ListUsers()
         {
@@ -41,7 +43,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
         [HttpGet]
         public async Task<IActionResult> EditUser(string id)
         {
-            var rydouser = await rydousermanager.FindByIdAsync(id);
+            ApplicationUser rydouser = await rydousermanager.FindByIdAsync(id);
 
             if (rydouser == null)
             {
@@ -70,7 +72,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
         [HttpPost]
         public async Task<IActionResult> EditUser(EditUserViewModel rydomodel)
         {
-            var rydouser = await rydousermanager.FindByIdAsync(rydomodel.id);
+            ApplicationUser rydouser = await rydousermanager.FindByIdAsync(rydomodel.id);
 
             if (rydouser == null)
             {
@@ -102,7 +104,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteUser(string id)
         {
-            var rydouser = await rydousermanager.FindByIdAsync(id);
+            ApplicationUser rydouser = await rydousermanager.FindByIdAsync(id);
 
             if (rydouser == null)
             {
@@ -131,7 +133,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
         #region Roles
 
-        [Route("~/")]
+        
         [HttpGet]
         public IActionResult ListRoles()
         {
@@ -322,7 +324,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
             for (int i = 0; i < lstrydomodel.Count; i++)
             {
-                var user = await rydousermanager.FindByIdAsync(lstrydomodel[i].UserId);
+                ApplicationUser user = await rydousermanager.FindByIdAsync(lstrydomodel[i].UserId);
 
                 IdentityResult result = null;
 
@@ -347,7 +349,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
             ViewBag.userId = userId;
 
-            var rydouser = await rydousermanager.FindByIdAsync(userId);
+            ApplicationUser rydouser = await rydousermanager.FindByIdAsync(userId);
 
             if (rydouser == null)
             {
@@ -376,7 +378,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
         [HttpPost]
         public async Task<IActionResult> ManageUserRoles(List<UserRolesViewModel> rydomodel, string userId)
         {
-            var rydouser = await rydousermanager.FindByIdAsync(userId);
+            ApplicationUser rydouser = await rydousermanager.FindByIdAsync(userId);
 
             if (rydouser == null)
             {
@@ -385,10 +387,10 @@ namespace EmployeeManagementUsingIdentity.Controllers
             }
 
             // Get all Roles related to that user
-            var roles = await rydousermanager.GetRolesAsync(rydouser);
+            IList<string> roles = await rydousermanager.GetRolesAsync(rydouser);
 
             // Remove all roles from that user
-            var result = await rydousermanager.RemoveFromRolesAsync(rydouser, roles);
+            IdentityResult result = await rydousermanager.RemoveFromRolesAsync(rydouser, roles);
 
             if (!result.Succeeded)
             {
@@ -397,7 +399,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
             }
             // Re Adding those roles which are now selected
 
-            var newroles = rydomodel.Where(rx => rx.IsSelected).Select(ry => ry.RoleName);
+            IEnumerable<string> newroles = rydomodel.Where(rx => rx.IsSelected).Select(ry => ry.RoleName);
 
             result = await rydousermanager.AddToRolesAsync(rydouser, newroles);
 
@@ -416,7 +418,7 @@ namespace EmployeeManagementUsingIdentity.Controllers
         [HttpGet]
         public async Task<IActionResult> ManageUserClaims(string userId)
         {
-            var rydouser = await rydousermanager.FindByIdAsync(userId);
+            ApplicationUser rydouser = await rydousermanager.FindByIdAsync(userId);
 
             if(rydouser==null)
             {
@@ -453,7 +455,8 @@ namespace EmployeeManagementUsingIdentity.Controllers
         [HttpPost]
         public async Task<IActionResult> ManageUserClaims(UserClaimsViewModel rydomodel)
         {
-            var rydouser = await rydousermanager.FindByIdAsync(rydomodel.UserId);
+            // Check of user with the passed id is even there or not.
+            ApplicationUser rydouser = await rydousermanager.FindByIdAsync(rydomodel.UserId);
 
             if (rydouser == null)
             {
@@ -461,15 +464,21 @@ namespace EmployeeManagementUsingIdentity.Controllers
                 return View("NotFound");
             }
 
-            var rydoclaims = await rydousermanager.GetClaimsAsync(rydouser);
-            var result = await rydousermanager.RemoveClaimsAsync(rydouser, rydoclaims);
+            // Get claims for the user
+            IList<Claim> rydoclaims = await rydousermanager.GetClaimsAsync(rydouser);
+
+            // Delete all claims for the user
+            IdentityResult result = await rydousermanager.RemoveClaimsAsync(rydouser, rydoclaims);
 
             if(!result.Succeeded)
             {
                 ModelState.AddModelError("", "Cannot Remove Existing Claims");
             }
 
+            // Get all claims from the VM passed
             IEnumerable<UserClaim> userclaims = rydomodel.Claims;
+
+            // Map UserClaim to Claim
             IEnumerable<Claim> claimstoadd = userclaims.Select(s => new Claim(s.ClaimType, s.IsSelected ? "true":"false" ));
 
             result = await rydousermanager.AddClaimsAsync(rydouser, claimstoadd);
@@ -492,8 +501,17 @@ namespace EmployeeManagementUsingIdentity.Controllers
 
 //-----rydousermanager---------
 
+//Users
+
 //GetClaimsAsync(rydouser)
 //GetRolesAsync(rydouser)
+
 //FindByEmailAsync(email)
 //FindByIdAsync(id)
+//IsInRoleAsync(user, role.Name)
 //AddClaimsAsync(rydouser, claimstoadd);
+
+//------rydorolemanager-------
+
+// Roles
+//.FindByIdAsync(id);

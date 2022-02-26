@@ -18,7 +18,7 @@
     "EmployeeManagementUsingIdentity": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "http://localhost:1063",
+      "applicationUrl": "http://localhost:5023",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

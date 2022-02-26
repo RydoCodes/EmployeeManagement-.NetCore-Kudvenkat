@@ -27,15 +27,17 @@ namespace EmployeeManagementUsingIdentity
         }
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddResponseCaching();
             services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 
             services.AddMvc(rydooption => {
                 rydooption.EnableEndpointRouting = false; // Need it to use app.UseMvc() middleware.
-                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build(); // This policy says to add authorise attribute to all the controllers in this project.
+                AuthorizationPolicy policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build(); // This policy says to add authorise attribute to all the controllers in this project.
                 rydooption.Filters.Add(new AuthorizeFilter(policy)); // Adding this policy as a filter
             }).AddXmlSerializerFormatters();
 
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(_rydoconfig.GetConnectionString("EmployeeDBConnection")));
+            // "EmployeeDBConnection": "server=ICEN126\\SQLEXPRESS;database=EmployeeDotCoreIdentity;Trusted_Connection=true;MultipleActiveResultSets=true"
 
             services.AddIdentity<ApplicationUser, IdentityRole>(rydoconfigureoptions=> {
                 rydoconfigureoptions.Password.RequiredLength = 2;
@@ -79,6 +81,7 @@ namespace EmployeeManagementUsingIdentity
               app.UseExceptionHandler("/Error");
                app.UseStatusCodePagesWithReExecute("/Error/{0}");
             }
+            app.UseResponseCaching();
 
             app.UseStaticFiles();
             app.UseAuthentication(); // We want to authenticate users before the request reached the useMVC Middlewares

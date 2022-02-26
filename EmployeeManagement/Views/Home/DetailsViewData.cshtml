@@ -1,0 +1,31 @@
+﻿
+@{
+    ViewData["Title"] = "DetailsViewData";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>DetailsViewData</h1>
+
+<html>
+<head>
+
+</head>
+<body>
+    <h3>@ViewData["Title"]</h3>
+
+    @{
+        Employee employee = ViewData["Employee"] as EmployeeManagement.Model.Employee;
+    }
+
+    <div>
+        Name : @employee.Name
+    </div>
+    <div>
+        Email : @employee.Email
+    </div>
+    <div>
+        Department : @employee.Department
+    </div>
+
+</body>
+</html>

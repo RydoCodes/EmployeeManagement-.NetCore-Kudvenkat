@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 
 namespace EmployeeManagement.Controllers
 {
+    [Route("[controller]/[action]")]
     public class HomeController : Controller
     {
         private IEmployeeRepository _employeerepository;
@@ -16,17 +17,24 @@ namespace EmployeeManagement.Controllers
         {
             _employeerepository = employeerepository;
         }
+
+        [Route("~/")]
+        public RedirectToRouteResult Test()
+        {
+            return RedirectToRoute("default");
+        }
+
         public ViewResult Index()
         {
-            //return _employeerepository.GetEmployee(1).Name;  
 
             return View(_employeerepository.GetEmployee());
 
         }
 
-        public ViewResult Details(int id)
+        [Route("{id?}")]
+        public ViewResult Details(int? id)
         {
-            Employee model = _employeerepository.GetEmployee(id);
+            Employee model = _employeerepository.GetEmployee(id ?? 1);
 
             HomeDetailsViewModel vm = new HomeDetailsViewModel();
             vm.Employee = model;
@@ -53,42 +61,42 @@ namespace EmployeeManagement.Controllers
            
         }
 
-        //public ViewResult Details()
-        //{
-        //    Employee model = _employeerepository.GetEmployee(1);
+        public ViewResult DetailsViewData()
+        {
+            Employee model = _employeerepository.GetEmployee(1);
+            ViewData["Employee"]= model;
+            ViewData["Title"] = "Employee Details";
+            return View(model);
 
+        }
+        public ViewResult DetailsViewBag()
+        {
+            Employee model = _employeerepository.GetEmployee(1);
+            ViewBag.Employee = model;
+            ViewBag.Title = "Employee Details";
+            return View(model);
+        }
 
+        public ObjectResult Details1()
+        {
+            return new ObjectResult(_employeerepository.GetEmployee(1));   // Use ObjectResult when you want .net core to have abl for content negotiation
+        }
+        public ViewResult Details3()
+        {
+            return View("RydoView", _employeerepository.GetEmployee(1)); // Looks for a RydoView.cshtml inside Home Controller.
+        }
+        public ViewResult Details4()
+        {
+            return View("RydoViews/RydoPornHub.cshtml"); // Look for a view based on ABSOLUTE PATH
+        }
+        public ViewResult Details5()
+        {
+            return View("Views/Home/Test.cshtml"); // Look for a view based on ABSOLUTE PATH / Another way to show default View.
+        }
+        public ViewResult Details6()
+        {
+            return View("../Test/Update"); // Look for a view based on Relative PATH
+        }
 
-        //    // ViewData["Employee"]= model;
-        //    //ViewData["Title"] = "Employee Details";
-
-        //    //ViewBag.Employee = model;
-        //    //ViewBag.Title = "Employee Details";
-
-        //    //ViewBag.Title = "Employee Details";
-        //    //return View(model);
-
-        //    HomeDetailsViewModel vm = new HomeDetailsViewModel();
-        //    vm.Employee = model;
-        //    vm.PageTitle = "Rydo App";
-
-        //    return View(vm);
-        //}
-
-        //public ViewResult Details()
-        //{
-        //    //return new ObjectResult(_employeerepository.GetEmployee(1));   // Use ObjectResult when you want .net core to have abl for content negotiation
-
-        //    //return View(_employeerepository.GetEmployee(1)); // Normal Behaviour of .Net Core to look for the cshtml page related to this code
-
-        //    //return View("RydoView", _employeerepository.GetEmployee(1)); // Looks for a RydoView.cshtml inside Home Controller.
-
-        //    //return View("RydoViews/RydoPornHub.cshtml"); // Look for a view based on ABSOLUTE PATH
-
-        //   // return View("Views/Home/Test.cshtml"); // Look for a view based on ABSOLUTE PATH / Another way to show default View.
-
-        //     return View("../Test/Update"); // Look for a view based on Relative PATH 
-
-        //}
     }
 }

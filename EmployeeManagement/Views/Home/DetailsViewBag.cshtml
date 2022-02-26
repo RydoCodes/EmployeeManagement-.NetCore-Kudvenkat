@@ -1,0 +1,25 @@
+﻿@*View Bag Example*@
+
+<html>
+    <head>
+
+    </head>
+    <body>
+        <h3>@ViewBag.Title</h3>
+
+        @{
+           Employee employee = @ViewBag.Employee as EmployeeManagement.Model.Employee;
+         }
+
+        <div>
+            Name : @ViewBag.employee.Name
+        </div>
+        <div>
+            Email : @ViewBag.employee.Email
+        </div>
+        <div>
+            Department : @ViewBag.employee.Department
+        </div>
+
+    </body>
+</html>
